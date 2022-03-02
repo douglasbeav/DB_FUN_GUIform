@@ -7,6 +7,7 @@ import static javax.swing.JOptionPane.QUESTION_MESSAGE;
 
 public class LoginWindow_GUI extends JFrame {
 
+    private static LoginWindow_GUI loginWindow;
     private JPanel mainPnl;
     private JLabel usrIconLbl;
     private JLabel loginLbl;
@@ -18,10 +19,16 @@ public class LoginWindow_GUI extends JFrame {
     private JButton cnctBtn;
     private JButton cnclBtn;
 
-    public LoginWindow_GUI() {
+    private LoginWindow_GUI() {
         super("Login Window");
         createUIComponents();
+    }
 
+    public static synchronized LoginWindow_GUI getLoginWindow() {
+        if (loginWindow == null) {
+            loginWindow = new LoginWindow_GUI();
+        }
+        return loginWindow;
     }
 
     private void createUIComponents() {
@@ -40,6 +47,9 @@ public class LoginWindow_GUI extends JFrame {
                     if(utils.checkLogin(userName, password)) {
                         JOptionPane.showMessageDialog(null,
                                 "User found.\nAccess granted.", "Information", QUESTION_MESSAGE);
+                        LoginWindow_GUI.super.setVisible(false);
+                        JFrame addFrame = new AddNewUser();
+                        addFrame.setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(null,
                                 "User not found\nAccess denied", "Alert", ERROR_MESSAGE);
@@ -47,7 +57,6 @@ public class LoginWindow_GUI extends JFrame {
                     usrTxtFld.setText("");
                     pswrdFld.setText("");
                     usrTxtFld.grabFocus();
-
                 } catch (Exception e1) {
                     JOptionPane.showMessageDialog(null, e1);
                 }
